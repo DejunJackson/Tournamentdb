@@ -11,6 +11,21 @@ class Player(db.Model):
     classification = db.Column(db.String(128), nullable=False)
     team_id = db.Column(db.Integer, db.ForeignKey('teams.id'), nullable=False)
 
+    def __init__(self, name: str, position: str, classification: str, team_id: int):
+        self.name = name
+        self.position = position
+        self.classification = classification
+        self.team_id = team_id
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'position': self.position,
+            'classification': self.classification,
+            'team_id': self.team_id
+        }
+
 
 class Team(db.Model):
     __tablename__ = 'teams'
@@ -22,6 +37,23 @@ class Team(db.Model):
     losses = db.Column(db.Integer, default=0)
     players = db.relationship('Player', backref='team', cascade="all,delete")
 
+
+    def __init__(self, name: str, city: str, state: str):
+        self.name = name
+        self.city = city
+        self.state = state
+        self.wins = 0
+        self.losses = 0
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'city': self.city,
+            'state': self.state,
+            'wins': self.wins,
+            'losses': self.losses
+        }
 
 class Game(db.Model):
     __tablename__ = 'games'

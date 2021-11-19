@@ -31,8 +31,10 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
-    from .api import players
+    from .api import players, teams, games, rounds
     app.register_blueprint(players.bp)
-    # app.register_blueprint(tweets.bp)
+    app.register_blueprint(teams.bp)
+    app.register_blueprint(games.bp)
+    app.register_blueprint(rounds.bp)
 
     return app
