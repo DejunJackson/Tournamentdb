@@ -20,8 +20,35 @@ def create():
     p = Player(
         name=request.json['name'],
         position=request.json['position'],
-        classification=request.json['classification']
+        classification=request.json['classification'],
+        team_id=request.json['team_id']
     )
     db.session.add(p)  # prepare CREATE statement
     db.session.commit()  # execute CREATE statement
+    return jsonify(p.serialize())
+
+@bp.route('/<int:id>', methods=['GET'])
+def show(id: int):
+    p = Player.query.get_or_404(id)
+    return jsonify(p.serialize())
+
+@bp.route('/<int:id>', methods=['DELETE'])
+def delete(id: int):
+    p = Player.query.get_or_404(id)
+    try:
+        db.session.delete(p)  # prepare DELETE statement
+        db.session.commit()  # execute DELETE statement
+        return jsonify(True)
+    except:
+        # something went wrong :(
+        return jsonify(False)
+
+@bp.route('/<int:id>', methods=['PUT'])
+def update(id: int):
+    p = Player.query.get_or_404(id)
+    p.name=request.json['name']
+    p.position=request.json['position']
+    p.classification=request.json['classification'],
+    p.team_id=request.json['team_id']
+    db.session.commit()
     return jsonify(p.serialize())

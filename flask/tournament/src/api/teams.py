@@ -44,31 +44,34 @@ def delete(id: int):
 @bp.route('/<int:id>', methods=['PATCH'])
 def update(id: int):
     t = Team.query.get_or_404(id)
-    changed = False
     if 'name' in request.json and 'city' in request.json and 'state' in request.json:
         t.name = request.json['name']
         t.city = request.json['city']
         t.state = request.json['state']
-        changed = True
     elif 'name' in request.json and 'city' in request.json:
         t.name = request.json['name']
         t.city = request.json['city']
-        changed = True
     elif 'name' in request.json and 'state' in request.json:
         t.name = request.json['name']
         t.state = request.json['state']
-        changed = True
     elif 'city' in request.json and 'state' in request.json:
         t.city = request.json['city']
         t.state = request.json['state']
-        changed = True
     elif 'name' in request.json:
         t.name = request.json['name']
-        changed = True
     elif 'city' in request.json:
         t.city = request.json['city']
-        changed = True
     elif 'state' in request.json:
         t.state = request.json['state']
     db.session.commit()
-    return jsonify(changed)
+    return jsonify(t.serialize())
+
+#Get players in a team
+@bp.route('/<int:id>/players', methods=['GET'])
+def show_likes(id: int):
+    t = Team.query.get_or_404(id)
+
+    result = []
+    for p in t.players:
+        result.append(p.serialize())
+    return jsonify(result)

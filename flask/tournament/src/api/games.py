@@ -3,3 +3,5 @@ from ..models import db, Game
 
 
 bp = Blueprint('games', __name__, url_prefix='/games')
+
+#Add games api endpoint
